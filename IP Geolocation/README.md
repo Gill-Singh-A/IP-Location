@@ -9,7 +9,11 @@ Modules/Packages used:
 * sys
 * json
 * requests
+* datetime
+* optparse
+* pickle
 * colorama
+* time
 
 ## Input
 * '-t', "--target" : IP Address/Addresses of the Target/Targets to scan Ports (seperated by ',')
