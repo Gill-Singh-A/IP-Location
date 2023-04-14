@@ -3,7 +3,31 @@ import tkintermapview
 from sys import argv
 from json import loads
 from requests import get
-from colorama import Fore, Style
+from datetime import date
+from optparse import OptionParser
+from pickle import dump, load
+from colorama import Fore, Back,  Style
+from time import strftime, localtime
+
+status_color = {
+	'+': Fore.GREEN,
+	'-': Fore.RED,
+	'*': Fore.YELLOW,
+	':': Fore.CYAN,
+	' ': Fore.WHITE,
+}
+
+def get_time():
+	return strftime("%H:%M:%S", localtime())
+def display(status, data):
+	print(f"{status_color[status]}[{status}] {Fore.BLUE}[{date.today()} {get_time()}] {status_color[status]}{Style.BRIGHT}{data}{Fore.RESET}{Style.RESET_ALL}")
+
+
+def get_arguments(*args):
+	parser = OptionParser()
+	for arg in args:
+		parser.add_option(arg[0], arg[1], dest=arg[2], help=arg[3])
+	return parser.parse_args()[0]
 
 def display_ip_location_info(data):
     max_space = max([len(key) for key, _ in data.items()])+5
@@ -42,4 +66,40 @@ def get_ip_location(ips, verbose=False, locate=False):
     return location_data
 
 if __name__ == "__main__":
-    get_ip_location(argv[1:], verbose=True, locate=True)
+    data = get_arguments(('-t', "--target", "target", "IP Address/Addresses of the Target/Targets to scan Ports (seperated by ',')"),
+                         ('-v', "--verbose", "verbose", "Display Information about IP's Location on screen (Default=True)"),
+                         ('-l', "--locate", "locate", "Locate IP's Location on Map (Default=True)"),
+                         ('-w', "--write", "write", "File to which the IP Location Data has to be dumped"),
+                         ('-r', "--read", "read", "File from which data dump has to be read"))
+    if data.read:
+        try:
+            with open(data.read, 'rb') as file:
+                location_data = load(file)
+        except FileNotFoundError:
+            display('-', f"{Back.MAGENTA}{data.read}{Back.RESET} File not found!")
+            exit(0)
+        except:
+            display('-', f"Error reading from file {Back.MAGENTA}{data.read}{Back.RESET}")
+            exit(0)
+        for ip_location_data in location_data:
+            display_ip_location_info(ip_location_data)
+        if data.locate:
+            locate_ip_on_map(location_data)
+        exit(0)
+    if not data.target:
+        display('-', "Please specify a Target")
+        exit(0)
+    else:
+        data.target = data.target.split(',')
+    if not data.verbose:
+        data.verbose = False
+    else:
+        data.verbose = True
+    if not data.locate:
+        data.locate = False
+    else:
+        data.locate = True
+    location_data = get_ip_location(data.target, verbose=data.verbose, locate=data.locate)
+    if data.write:
+        with open(data.write, 'wb') as file:
+            dump(location_data, file)
