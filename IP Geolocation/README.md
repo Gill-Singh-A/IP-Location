@@ -12,10 +12,14 @@ Modules/Packages used:
 * colorama
 
 ## Input
-It takes the Target's IP Address from the command that is used to run the Python Program.
+* '-t', "--target" : IP Address/Addresses of the Target/Targets to scan Ports (seperated by ',')
+* '-v', "--verbose" : Display Information about IP's Location on screen (Default=True)
+* '-l', "--locate" : Locate IP's Location on Map (Default=True)
+* '-w', "--write" : File to which the IP Location Data has to be dumped
+* '-r', "--read" : File from which data dump has to be read
 
 ## Output
-It displays the Geological Information about the IP Address's Location that it got from IPGeolocation's API and also adds a marker on the map that was created using tkinter and tkintermapview.<br /><br />
+It displays the Geological Information about the IP Address's Location that it got from IPGeolocation's API and also adds a marker on the map that was created using tkinter and tkintermapview depeding on the input provided by the user.<br /><br />
 
 ### Note 
 * The location might not be correct
