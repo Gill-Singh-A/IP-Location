@@ -92,13 +92,19 @@ if __name__ == "__main__":
     else:
         data.target = data.target.split(',')
     if not data.verbose:
-        data.verbose = False
-    else:
         data.verbose = True
-    if not data.locate:
-        data.locate = False
     else:
+        if data.verbose == "False":
+            data.verbose = False
+        else:
+            data.verbose = True
+    if not data.locate:
         data.locate = True
+    else:
+        if data.locate == "False":
+            data.locate = False
+        else:
+            data.locate = True
     location_data = get_ip_location(data.target, verbose=data.verbose, locate=data.locate)
     if data.write:
         with open(data.write, 'wb') as file:
