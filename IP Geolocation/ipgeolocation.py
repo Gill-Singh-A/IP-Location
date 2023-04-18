@@ -48,8 +48,11 @@ def locate_ip_on_map(location_data):
     map_widget = tkintermapview.TkinterMapView(window, width=800, height=600, corner_radius=0)
     map_widget.place(relx=0.5, rely=0.5, anchor=tkinter.CENTER)
     for data in location_data:
-        map_widget.set_marker(float(data["latitude"]), float(data["longitude"]), text=data["ip"])
-        map_widget.set_position(float(data["latitude"]), float(data["longitude"]))
+        try:
+            map_widget.set_marker(float(data["latitude"]), float(data["longitude"]), text=data["ip"])
+            map_widget.set_position(float(data["latitude"]), float(data["longitude"]))
+        except:
+            pass
     window.mainloop()
 
 def get_ip_location(ips, verbose=False, locate=False):
