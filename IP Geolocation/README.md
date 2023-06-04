@@ -14,6 +14,11 @@ Modules/Packages used:
 * pickle
 * colorama
 * time
+<!-- -->
+Install the dependencies:
+```bash
+pip install -r requirements.txt
+```
 
 ## Input
 * '-t', "--target" : IP Address/Addresses of the Target/Targets to scan Ports (seperated by ',')
