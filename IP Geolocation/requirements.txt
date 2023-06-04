@@ -1,0 +1,4 @@
+tkintermapview
+requests
+datetime
+colorama
