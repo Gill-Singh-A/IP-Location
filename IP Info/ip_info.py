@@ -70,6 +70,7 @@ def get_ip_location(ips, verbose=False, locate=False):
 
 if __name__ == "__main__":
     data = get_arguments(('-t', "--target", "target", "IP Address/Addresses of the Target/Targets to scan Ports (seperated by ',')"),
+                         ('-L', "--load", "load", "Load IP Addresses from a File"),
                          ('-v', "--verbose", "verbose", "Display Information about IP's Location on screen (Default=True)"),
                          ('-l', "--locate", "locate", "Locate IP's Location on Map (Default=True)"),
                          ('-w', "--write", "write", "File to which the IP Location Data has to be dumped"),
@@ -90,8 +91,18 @@ if __name__ == "__main__":
             locate_ip_on_map(location_data)
         exit(0)
     if not data.target:
-        display('-', "Please specify a Target")
-        exit(0)
+        if not data.load:
+            display('-', "Please specify a Target")
+            exit(0)
+        try:
+            with open(data.load, 'r') as file:
+                data.target = [ip for ip in file.read().split('\n') if ip != '']
+        except FileNotFoundError:
+            display('-', f"{Back.MAGENTA}{data.read}{Back.RESET} File not found!")
+            exit(0)
+        except:
+            display('-', f"Error reading from file {Back.MAGENTA}{data.read}{Back.RESET}")
+            exit(0)
     else:
         data.target = data.target.split(',')
     if not data.verbose:
